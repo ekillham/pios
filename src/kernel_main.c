@@ -1,5 +1,5 @@
 #include <stdio.h>
-// #include "list.h"
+#include "list.h"
 
 extern long __bss_start;
 extern long __bss_end;
@@ -7,16 +7,23 @@ extern long __bss_end;
 void clear_bss();
 
  
-/* Still a bit confused here 
-struct list_element b = {NULL,NULL, 1};
-struct list_element a = {NULL,NULL, 5};
-struct list_element c = {NULL,NULL, 2};
-struct list_element *head = &a;
-*/
+
+
+struct list_element* list = 0;
 
 void kernel_main() {
-
     clear_bss();
+
+//still troubleshooting/bug fixing not entierly functional yet
+    list_add(&list, 5);
+    list_add(&list, 1);
+    list_add(&list, 4);
+    list_add(&list, 3);
+
+    list_remove(&list, 5);
+    list_remove(&list, 3);
+    list_remove(&list, 1);
+
     while(1){
     }
 }
