@@ -4,23 +4,32 @@
 extern long __bss_start;
 extern long __bss_end;
 
-void clear_bss();
+//Office Hours 2/1 w/ Jack
+void clear_bss()
 
- 
+{
+	int x = 0;
+	while ((&__bss_start)+x != &__bss_end){
+		(&__bss_start)[x] = 0;
+		x++;
+		}
+}
 
 
-struct list_element* list = 0;
+struct list_element a = {NULL,NULL,7};
+struct list_element* list = &a;
+
 
 void kernel_main() {
-    clear_bss();
+     clear_bss();
 
-//still troubleshooting/bug fixing not entierly functional yet
-    list_add(&list, 5);
-    list_add(&list, 1);
-    list_add(&list, 4);
+
     list_add(&list, 3);
+    list_add(&list, 9);
+    list_add(&list, 1);
 
-    list_remove(&list, 5);
+    list_remove(&list, 7);
+    list_remove(&list, 9);
     list_remove(&list, 3);
     list_remove(&list, 1);
 
@@ -28,12 +37,6 @@ void kernel_main() {
     }
 }
 
-void clear_bss(){
-    (&__bss_start)[0] = 0x0c;
-    int i=0;
-    while ((&__bss_start)+i != &__bss_end){
-    	(&__bss_start)[i] = 0;
-    	i++;
-    	}
-}
+
+
 
