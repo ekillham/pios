@@ -1,10 +1,15 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "list.h"
 
+int global;
 extern long __bss_start;
 extern long __bss_end;
+unsigned int *gpset1 = 0xFE200020;
+unsigned int *gpclr1 = 0xFE20002C;
+unsigned int *gpsel4 = 0xFE200010;
 
-//Office Hours 2/1 w/ Jack
+//HW1 Office Hours 2/1 w/ Jack
 void clear_bss()
 
 {
@@ -16,27 +21,46 @@ void clear_bss()
 }
 
 
-struct list_element a = {NULL,NULL,7};
-struct list_element* list = &a;
 
-
-void kernel_main() {
-     clear_bss();
-
-
-    list_add(&list, 3);
-    list_add(&list, 9);
-    list_add(&list, 1);
-
-    list_remove(&list, 7);
-    list_remove(&list, 9);
-    list_remove(&list, 3);
-    list_remove(&list, 1);
-
-    while(1){
-    }
+//hw4
+void led_init(){
+	unsigned int mask_number = 0xFFFFFE3F;
+	*gpsel4 = *gpsel4 & mask_number;
+	*gpsel4 = *gpsel4 | (1 << 6);
+	return;
 }
 
+void led_on(){
+	*gpset1 = (1 << 10);
+}
+
+void led_off(){
+	*gpclr1 = (1 << 10);
+}
+
+void delay (unsigned int d){  //Neil's Delay from class
+	unsigned int i, x;
+
+	for(i = 0; i < 0x7f; i++) {
+		for (x = 0; x < d; x++){
+			asm("nop");
+		}
+	}
+
+}
+
+
+void kernel_main(){
+	//clear_bss();
+    led_init();
+
+	while(1){
+		led_on();
+		delay(1000);
+		led_off();
+		delay(1000);
+	}
+}
 
 
 
