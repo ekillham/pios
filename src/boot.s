@@ -1,5 +1,5 @@
 // AArch64 mode
- 
+
 .section ".kernel-header"
 
 // Kernel Header
@@ -17,13 +17,13 @@ b _start           /* CODE0 : Executable code */
 
 // To keep this in the first portion of the binary.
 .section ".text.boot"
- 
+
 // To keep this in the first portion of the binary.
 .section ".text.boot"
- 
+
 // Make _start global.
 .globl _start
- 
+
 // Entry point for the kernel. Registers:
 // x0 -> 32 bit pointer to DTB in memory (primary core only) / 0 (secondary cores)
 // x1 -> 0

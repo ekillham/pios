@@ -1,10 +1,13 @@
-#include <stdio.h>
+//#include <stdio.h>
 #include <stdlib.h>
-#include "list.h"
+//#include "list.h"
+#include "serial.h"
 
 int global;
+#define NULL (void*)0
 extern long __bss_start;
 extern long __bss_end;
+
 unsigned int *gpset1 = 0xFE200020;
 unsigned int *gpclr1 = 0xFE20002C;
 unsigned int *gpsel4 = 0xFE200010;
@@ -38,7 +41,7 @@ void led_off(){
 	*gpclr1 = (1 << 10);
 }
 
-void delay (unsigned int d){  //Neil's Delay from class
+void delay (unsigned int d){
 	unsigned int i, x;
 
 	for(i = 0; i < 0x7f; i++) {
@@ -49,16 +52,32 @@ void delay (unsigned int d){  //Neil's Delay from class
 
 }
 
+int getEL(){
+	unsigned int el;
 
-void kernel_main(){
-	//clear_bss();
-    led_init();
+	asm("mrs %0,CurrentEL"
+		: "=r"(el)
+		:
+		:);
+
+}
+
+
+void kernel_main(void){
+         //led_init();
+
+	int el =  getEL();
+
+	esp_printf(putc, "Execution Level: %d \r\n", el);
+	esp_printf(putc, "Execution Level: %d \r\n", getEL());
+	esp_printf(putc, "The character added is %d" , kernel_main);
+
 
 	while(1){
-		led_on();
+		/*led_on();
 		delay(1000);
 		led_off();
-		delay(1000);
+		delay(1000);*/
 	}
 }
 
