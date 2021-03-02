@@ -1,58 +1,44 @@
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
 
-//Source: https://www.geeksforgeeks.org/doubly-linked-list/
-//Was pretty lost until doing a bit of reserach on manpiulating linked lists. Still trying to relearn alot and bridge the knowledge gap.
 
-void list_add (struct list_element** head, int new_data){
 
-	struct list_element* new_node;
-	struct list_element* last = *head;
+void list_add (struct list_element *head, int new_data){
 
-	new_node->data = new_data;
+	struct list_element* prev;
+	struct list_element* temp = head;
 
-	new_node->next = NULL;
-
-	if(*head == NULL){
-		new_node->prev = NULL;
-		*head = new_node;
-		return;
+	while (temp->next){
+		prev = temp;
+		temp = temp->next;
 	}
 
-	while (last->next != NULL)
-		last = last->next;
-
-
-	last->next = new_node;
-	new_node->prev = last;
-
-	return;
+	temp->prev = prev;
+	temp->next = ele;
 
 }
 
-void list_remove(struct list_element **head, int rem_data)
-{
- 	struct list_element* temp = *head, *prev;
+void list_remove(struct list_element* head, int data){
 
-	if (temp != NULL && temp->data == rem_data)
- 	{
- 		*head = temp->next;
+ 	struct list_element* head_pointer = head;
+
+ 	if(head == NULL){
  		return;
  	}
 
- 	while ( temp != NULL && temp->data != rem_data)
- 	{
- 		prev = temp;
- 		temp = temp->next;
+ 	if (head_pointer->data == data){
+ 		*head = head_pointer->next;
+ 		return;
  	}
 
- 	if  (temp == NULL)
- 	 	return;
+ 	while(head_pointer->next){
+ 		if(data == head_pointer->next->data){
+ 			head_pointer->next = head_pointer->next->next;
+ 			break;
+ 		}
+ 		head_pointer = head_pointer->next;
+	}
 
-
- 	prev->next = temp->next;
 
 }
