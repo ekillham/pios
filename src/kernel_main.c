@@ -1,12 +1,13 @@
-//#include <stdio.h>
-#include <stdlib.h>
-//#include "list.h"
+#include "list.h"
 #include "serial.h"
+#include "rprintf.h"
+#include "page.h"
 
 int global;
 #define NULL (void*)0
 extern long __bss_start;
 extern long __bss_end;
+extern struct ppage* free_list;
 
 unsigned int *gpset1 = 0xFE200020;
 unsigned int *gpclr1 = 0xFE20002C;
@@ -63,21 +64,26 @@ int getEL(){
 }
 
 
-void kernel_main(void){
-         //led_init();
+void kernel_main(){
+	clear_bss();
 
-	int el =  getEL();
+        init_pfa_list();
 
-	esp_printf(putc, "Execution Level: %d \r\n", el);
-	esp_printf(putc, "Execution Level: %d \r\n", getEL());
-	esp_printf(putc, "The character added is %d" , kernel_main);
+	struct ppage* test = free_list->next;
+	esp_printf(putc, "Physical addr: %x \n", test->physical_addr);
+	test = allocate_physical_pages(2);
+	esp_printf(putc, "Physical addr (test) after npages: %x \n", test);
+	esp_printf(putc, "Physical addr (->physical_addr) after npages: %x \n", test->physical_addr);
+	free_physical_pages(test);
+	test = free_list->next;
+	esp_printf(putc, "Post free addr: %x \n", test->physical_addr);
 
+
+
+ 	//mmu_on();
 
 	while(1){
-		/*led_on();
-		delay(1000);
-		led_off();
-		delay(1000);*/
+
 	}
 }
 
