@@ -2,6 +2,9 @@
 #include "serial.h"
 #include "rprintf.h"
 #include "page.h"
+#include "mmu.h"
+#include "fat.h"
+#include "sd.h"
 
 int global;
 #define NULL (void*)0
@@ -24,35 +27,6 @@ void clear_bss()
 		}
 }
 
-
-
-//hw4
-void led_init(){
-	unsigned int mask_number = 0xFFFFFE3F;
-	*gpsel4 = *gpsel4 & mask_number;
-	*gpsel4 = *gpsel4 | (1 << 6);
-	return;
-}
-
-void led_on(){
-	*gpset1 = (1 << 10);
-}
-
-void led_off(){
-	*gpclr1 = (1 << 10);
-}
-
-void delay (unsigned int d){
-	unsigned int i, x;
-
-	for(i = 0; i < 0x7f; i++) {
-		for (x = 0; x < d; x++){
-			asm("nop");
-		}
-	}
-
-}
-
 int getEL(){
 	unsigned int el;
 
@@ -65,9 +39,19 @@ int getEL(){
 
 
 void kernel_main(){
-	clear_bss();
+//	clear_bss();
 
-        init_pfa_list();
+	struct file fat_test;
+
+
+	sd_init();
+	fatInit();
+	fatOpen(&fat_test,"TEST");
+	fatRead(&fat_test,"TESTFILE",32);
+
+
+/*
+      	init_pfa_list();
 
 	struct ppage* test = free_list->next;
 	esp_printf(putc, "Physical addr: %x \n", test->physical_addr);
@@ -77,10 +61,8 @@ void kernel_main(){
 	free_physical_pages(test);
 	test = free_list->next;
 	esp_printf(putc, "Post free addr: %x \n", test->physical_addr);
+*/
 
-
-
- 	//mmu_on();
 
 	while(1){
 

@@ -6,7 +6,7 @@ OBJDUMP := objdump
 OBJCOPY := objcopy
 CONFIGS := -DCONFIG_HEAP_SIZE=4096
 
-CFLAGS := -O0 -ffreestanding -fno-pie -fno-stack-protector -g3 -Wall $(CONFIGS)
+CFLAGS := -O0 -ffreestanding -fno-pie -fno-stack-protector -g3 -Wall -mgeneral-regs-only $(CONFIGS)
 
 
 ODIR = obj
@@ -19,6 +19,10 @@ OBJS = \
 	serial.o \
 	rprintf.o \
 	page.o \
+	mmu.o\
+	sd.o\
+	fat.o\
+	clibfuncs.o\
 
 
 OBJ = $(patsubst %,$(ODIR)/%,$(OBJS))
@@ -57,7 +61,7 @@ disassemble:
 
 rootfs.img:
 	dd if=/dev/zero of=rootfs.img bs=1M count=16
-	mkfs.fat -F12 rootfs.img
+	mkfs.fat -F16 rootfs.img
 	sudo mount rootfs.img /mnt/disk
 	sudo mkdir -p /mnt/disk/boot/firmware
 	sudo mkdir /mnt/disk/bin
